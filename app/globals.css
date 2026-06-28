@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  
+  /* Target design palette */
+  --color-primary: #22C55E;
+  --color-secondary: #16A34A;
+  --color-accent: #F59E0B;
+  --color-background: #FFFFFF;
+  --color-gray-bg: #F8FAFC;
+  --color-footer: #111827;
+
+  /* Extended font weights */
+  --font-weight-800: 800;
+  --font-weight-900: 900;
+}
+
+/* Global resets & base rules */
+@layer base {
+  :root {
+    --background: var(--color-background);
+    --foreground: #0f172a;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  /* Layout */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Typography weights used as classes */
+  .font-800 {
+    font-weight: 800;
+  }
+  .font-900 {
+    font-weight: 900;
+  }
+
+  /* Form input base style used in auth forms */
+  .fm-input {
+    @apply w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm
+           focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20
+           transition-all placeholder:text-gray-400;
+  }
+
+  /* Primary button used in auth forms */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-primary text-white font-bold
+           px-6 py-3 rounded-xl hover:bg-secondary active:scale-[0.98]
+           transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  /* Primary color shorthands referenced in older components */
+  .text-primary-500 {
+    color: var(--color-primary);
+  }
+  .hover\:text-primary-hover:hover {
+    color: var(--color-secondary);
+  }
+  .bg-primary-500 {
+    background-color: var(--color-primary);
+  }
+  .bg-primary-50 {
+    background-color: #f0fdf4;
+  }
+}
