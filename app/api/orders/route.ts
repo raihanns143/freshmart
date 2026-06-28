@@ -71,7 +71,14 @@ export async function POST(request: NextRequest) {
 
     // Calculate totals securely on the server
     let subtotal = 0;
-    const orderItemsData = [];
+    const orderItemsData: {
+      productId: string;
+      name: string;
+      image: string | null;
+      price: number;
+      quantity: number;
+      total: number;
+    }[] = [];
 
     for (const item of items) {
       // Validate product exists and price is correct
