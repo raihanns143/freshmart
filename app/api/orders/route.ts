@@ -7,7 +7,8 @@ import crypto from "crypto";
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user) {
+    const userId = session?.user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     const orders = await prisma.order.findMany({
-      where: { userId: session.user.id },
+      where: { userId },
       orderBy: { createdAt: "desc" },
       take: limit,
       skip,
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
     });
 
     const total = await prisma.order.count({
-      where: { userId: session.user.id }
+      where: { userId }
     });
 
     return NextResponse.json({
@@ -55,7 +56,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user) {
+    const userId = session?.user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -83,7 +85,8 @@ export async function POST(request: NextRequest) {
     for (const item of items) {
       // Validate product exists and price is correct
       const product = await prisma.product.findUnique({
-        where: { id: item.productId }
+        where: { id: item.productId },
+        include: { images: true }
       });
 
       if (!product || !product.inStock) {
@@ -129,7 +132,7 @@ export async function POST(request: NextRequest) {
       const newOrder = await tx.order.create({
         data: {
           orderNumber,
-          userId: session.user.id,
+          userId,
           subtotal,
           discount: couponDiscount,
           shipping,

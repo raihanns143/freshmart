@@ -61,7 +61,7 @@ async function main() {
     { name: "Snacks", slug: "snacks", color: "bg-pink-500" },
   ];
 
-  const categories = {};
+  const categories: Record<string, any> = {};
   for (const cat of categoriesData) {
     categories[cat.slug] = await prisma.category.create({
       data: cat,

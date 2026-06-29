@@ -56,7 +56,6 @@ const ALL_PRODUCTS: Product[] = Array.from({ length: 24 }, (_, i) => ({
   tags: [],
   isFeatured: i < 8,
   isActive: true,
-  metaTitle: null, metaDesc: null,
   rating: parseFloat((3.5 + (i % 15) * 0.1).toFixed(1)),
   reviewCount: 10 + i * 7,
   viewCount: 100 + i * 20,

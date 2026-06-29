@@ -53,8 +53,6 @@ const makeProduct = (
   tags: [],
   isFeatured: true,
   isActive: true,
-  metaTitle: null,
-  metaDesc: null,
   rating,
   reviewCount: reviews,
   viewCount: 0,

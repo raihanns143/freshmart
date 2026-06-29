@@ -39,7 +39,6 @@ const MOCK_PRODUCT: Product = {
   badge: "Organic", badgeColor: "green",
   tags: ["organic", "fruit", "fresh"],
   isFeatured: true, isActive: true,
-  metaTitle: null, metaDesc: null,
   rating: 4.8, reviewCount: 324, viewCount: 1200, soldCount: 800,
   specifications: [
     { id: "1", key: "Weight", value: "~150g per banana" },

@@ -85,7 +85,7 @@ export function getBadgeColor(color: string | null): string {
 }
 
 /** Debounce function */
-export function debounce<T extends (...args: unknown[]) => unknown>(
+export function debounce<T extends (...args: any[]) => void>(
   fn: T,
   delay: number
 ): (...args: Parameters<T>) => void {

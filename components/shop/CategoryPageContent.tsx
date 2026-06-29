@@ -106,7 +106,7 @@ const MOCK_PRODUCTS: Product[] = Array.from({ length: 8 }, (_, i) => ({
   }],
   badge: i % 3 === 0 ? "Organic" : null,
   badgeColor: i % 3 === 0 ? "green" : null,
-  tags: [], isFeatured: false, isActive: true, metaTitle: null, metaDesc: null,
+  tags: [], isFeatured: false, isActive: true,
   rating: 4.0 + (i % 10) * 0.1,
   reviewCount: 20 + i * 5, viewCount: 100, soldCount: 50,
   specifications: [], createdAt: new Date(), updatedAt: new Date(),

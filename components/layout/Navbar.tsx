@@ -316,7 +316,7 @@ export function Navbar() {
                           <Settings className="w-4 h-4 text-gray-400" />
                           Settings
                         </Link>
-                        {session.user?.role === "ADMIN" && (
+                        {(session.user as any)?.role === "ADMIN" && (
                           <Link
                             href="/admin"
                             onClick={() => setUserMenuOpen(false)}

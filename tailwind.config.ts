@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,6 +9,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
         primary: {
           DEFAULT: "#16C65B",
           hover: "#0FA64C",
@@ -19,7 +20,6 @@ const config: Config = {
           600: "#0FA64C",
           700: "#059669",
           900: "#064E3B",
-        },
         },
         dark: "#111827",
         section: "#F8FAFC",
@@ -66,7 +66,7 @@ const config: Config = {
       boxShadow: {
         card: "0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.06)",
         "card-hover": "0 4px 20px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.08)",
-        "product": "0 2px 8px rgba(0,0,0,0.06)",
+        product: "0 2px 8px rgba(0,0,0,0.06)",
         "product-hover": "0 8px 30px rgba(0,0,0,0.12)",
       },
       spacing: {
@@ -85,7 +85,7 @@ const config: Config = {
       animation: {
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-up": "slideUp 0.4s ease-out",
-        "float": "float 3s ease-in-out infinite",
+        float: "float 3s ease-in-out infinite",
         "pulse-green": "pulseGreen 2s ease-in-out infinite",
       },
       keyframes: {
