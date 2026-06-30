@@ -176,9 +176,13 @@ export function ProductDetailView({ product, inventory }: { product: any; invent
           <div className="w-full lg:w-2/3">
             <h2 className="text-2xl font-800 text-gray-900 mb-6">Product Description</h2>
             <div className="prose prose-gray max-w-none text-gray-600 mb-16">
-              {product.description.split('\n').map((paragraph: string, i: number) => (
-                <p key={i}>{paragraph}</p>
-              ))}
+              {product.description ? (
+                product.description.split('\n').map((paragraph: string, i: number) => (
+                  <p key={i}>{paragraph}</p>
+                ))
+              ) : (
+                <p>No description available.</p>
+              )}
             </div>
 
             <h2 className="text-2xl font-800 text-gray-900 mb-8">Customer Reviews</h2>
