@@ -21,14 +21,14 @@ const categories = [
     color: "bg-orange-500",
   },
   {
-    id: "dairy",
+    id: "dairy-eggs",
     name: "Dairy Products",
     items: "80+ items",
     image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80",
     color: "bg-blue-600",
   },
   {
-    id: "meat",
+    id: "meat-seafood",
     name: "Meat & Poultry",
     items: "120+ items",
     image: "https://images.unsplash.com/photo-1607166452264-61c19b3a5822?w=400&q=80",
@@ -49,7 +49,7 @@ const categories = [
     color: "bg-purple-500",
   },
   {
-    id: "frozen",
+    id: "frozen-foods",
     name: "Frozen Foods",
     items: "70+ items",
     image: "https://images.unsplash.com/photo-1571131652158-b610c436bb56?w=400&q=80",

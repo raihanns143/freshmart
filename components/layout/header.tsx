@@ -251,7 +251,7 @@ export function Header() {
                   {["Fresh Produce", "Dairy & Eggs", "Meat & Seafood", "Bakery", "Frozen Foods"].map((cat) => (
                     <Link
                       key={cat}
-                      href={`/category/${cat.toLowerCase().replace(" & ", "-").replace(" ", "-")}`}
+                      href={`/category/${cat.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-xl text-sm font-medium transition-colors"
                     >
