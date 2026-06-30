@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// This file is kept for backward compatibility.
-// The actual logic has been migrated to proxy.ts (Next.js 16+ convention).
-
 // Protected route patterns - only these are checked
 const PROTECTED_CUSTOMER_ROUTES = ["/dashboard/customer", "/checkout"];
 const PROTECTED_ADMIN_ROUTES = ["/dashboard/admin"];
 const AUTH_ROUTES = ["/login", "/register"];
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
 
@@ -36,6 +33,7 @@ export function middleware(req: NextRequest) {
   }
 
   // For admin routes, redirect to login if not authenticated
+  // (role check happens server-side in the admin layout)
   if (PROTECTED_ADMIN_ROUTES.some((r) => pathname.startsWith(r))) {
     if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/login", nextUrl));
