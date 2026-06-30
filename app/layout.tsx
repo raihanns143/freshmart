@@ -2,9 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Toaster } from "sonner";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+
 import "./globals.css";
 
 const inter = Inter({
@@ -57,14 +55,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} font-sans antialiased`}>
-      <body className="min-h-screen bg-gray-50 flex flex-col">
+      <body className="min-h-screen bg-gray-50 flex flex-col text-gray-900">
         <Providers>
-          <Header />
-          <div className="flex-1 flex flex-col min-h-screen pt-20 lg:pt-0 pb-16 md:pb-0">
-            {children}
-          </div>
-          <Footer />
-          <MobileBottomNav />
+          {children}
           <Toaster richColors position="bottom-right" />
         </Providers>
       </body>
