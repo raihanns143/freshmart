@@ -59,13 +59,15 @@ export function SpecialOffers() {
     <section className="py-16 bg-white">
       <div className="section-container">
         {/* Section Header */}
-        <div className="mb-10 text-center sm:text-left">
-          <h2 className="text-3xl font-800 text-gray-900 tracking-tight">Special Offers</h2>
-          <p className="text-gray-500 mt-2 font-medium">Exclusive deals and coupons for you</p>
+        <div className="mb-6 md:mb-10 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl md:text-3xl font-800 text-gray-900 tracking-tight text-left">Special Offers</h2>
+            <p className="hidden md:block text-gray-500 mt-2 font-medium text-left">Exclusive deals and coupons for you</p>
+          </div>
         </div>
 
-        {/* Offers Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Offers Grid / Scroll */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 gap-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible pb-4 md:pb-0">
           {OFFERS.map((offer, index) => {
             const Icon = offer.icon;
             const isCopied = copiedCode === offer.code;
@@ -78,7 +80,7 @@ export function SpecialOffers() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={cn(
-                  "relative rounded-[24px] p-6 border transition-all duration-300 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 overflow-hidden",
+                  "min-w-[280px] snap-start flex-shrink-0 md:min-w-0 md:flex-shrink relative rounded-[24px] p-6 border transition-all duration-300 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 overflow-hidden",
                   offer.bgClass,
                   offer.borderClass
                 )}

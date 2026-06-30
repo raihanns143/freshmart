@@ -55,17 +55,41 @@ export function Header() {
           : "bg-white lg:bg-transparent lg:text-white"
       )}
     >
-      <div className="section-container relative z-20">
-        <div className="flex items-center justify-between h-20 gap-4 lg:gap-8">
-          {/* Mobile Menu Toggle */}
+      <div className="section-container relative z-20 px-0 lg:px-4 lg:max-w-7xl lg:mx-auto">
+        
+        {/* === MOBILE HEADER === */}
+        <div className="flex lg:hidden items-center justify-between h-16 px-4 bg-white border-b border-gray-100">
+          {/* Hamburger */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="lg:hidden p-2 -ml-2 text-gray-700"
+            className="p-2 -ml-2 text-gray-700"
             aria-label="Open menu"
           >
             <Menu className="w-6 h-6" />
           </button>
 
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <img
+              src="/logo.png"
+              alt="FreshMart Logo"
+              className="h-8 w-auto object-contain"
+            />
+          </Link>
+
+          {/* Cart Icon with Red Badge */}
+          <Link href="/cart" className="relative p-2 -mr-2">
+            <ShoppingCart className="w-6 h-6 text-gray-700" />
+            {cartCount > 0 && (
+              <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-white">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        </div>
+
+        {/* === DESKTOP HEADER === */}
+        <div className="hidden lg:flex items-center justify-between h-20 gap-8 px-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
             <img
@@ -76,7 +100,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Search */}
-          <div className="hidden lg:flex flex-1 max-w-2xl mx-auto">
+          <div className="flex-1 max-w-2xl mx-auto">
             <form onSubmit={handleSearch} className="w-full relative">
               <input
                 type="text"
@@ -98,13 +122,13 @@ export function Header() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          <div className="flex items-center gap-4 flex-shrink-0">
             {/* Wishlist */}
             <Link
               href="/wishlist"
               className={cn(
-                "relative p-2 rounded-xl transition-colors hidden sm:block",
-                isScrolled ? "text-gray-600 hover:bg-gray-50" : "text-gray-600 lg:text-white/90 lg:hover:bg-white/10"
+                "relative p-2 rounded-xl transition-colors",
+                isScrolled ? "text-gray-600 hover:bg-gray-50" : "text-white/90 hover:bg-white/10"
               )}
             >
               <Heart className="w-6 h-6" />
@@ -116,13 +140,13 @@ export function Header() {
             </Link>
 
             {/* Account */}
-            <div className="hidden sm:block">
+            <div>
               {isAuthenticated ? (
                 <button
                   onClick={() => logout()}
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 rounded-xl transition-colors",
-                    isScrolled ? "text-gray-600 hover:bg-gray-50" : "text-gray-600 lg:text-white/90 lg:hover:bg-white/10"
+                    isScrolled ? "text-gray-600 hover:bg-gray-50" : "text-white/90 hover:bg-white/10"
                   )}
                 >
                   <User className="w-5 h-5" />
@@ -133,7 +157,7 @@ export function Header() {
                   onClick={() => login()}
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 rounded-xl transition-colors",
-                    isScrolled ? "text-gray-600 hover:bg-gray-50" : "text-gray-600 lg:text-white/90 lg:hover:bg-white/10"
+                    isScrolled ? "text-gray-600 hover:bg-gray-50" : "text-white/90 hover:bg-white/10"
                   )}
                 >
                   <User className="w-5 h-5" />
@@ -145,10 +169,10 @@ export function Header() {
             {/* Cart */}
             <Link
               href="/cart"
-              className="flex items-center gap-2 bg-primary hover:bg-secondary text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-colors shadow-sm"
+              className="flex items-center gap-2 bg-primary hover:bg-secondary text-white px-4 py-2.5 rounded-xl transition-colors shadow-sm"
             >
               <ShoppingCart className="w-5 h-5" />
-              <span className="hidden sm:block text-sm font-medium">Cart</span>
+              <span className="text-sm font-medium">Cart</span>
               {cartCount > 0 && (
                 <span className="w-5 h-5 bg-accent text-white text-xs font-bold flex items-center justify-center rounded-full">
                   {cartCount}
@@ -156,20 +180,6 @@ export function Header() {
               )}
             </Link>
           </div>
-        </div>
-
-        {/* Mobile Search (Visible only on small screens) */}
-        <div className="lg:hidden pb-4">
-          <form onSubmit={handleSearch} className="w-full relative">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-primary text-sm text-gray-900"
-            />
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          </form>
         </div>
       </div>
 

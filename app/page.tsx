@@ -2,20 +2,28 @@ import { Hero } from "@/components/sections/hero";
 import { Categories } from "@/components/sections/categories";
 import { FeaturedProducts } from "@/components/sections/featured-products";
 import { SpecialOffers } from "@/components/sections/special-offers";
+import { MobileSearch } from "@/components/sections/mobile-search";
+import { MobileCategoryBar } from "@/components/sections/mobile-category-bar";
+import { MobileHero } from "@/components/sections/mobile-hero";
 
 export default function Home() {
   return (
     <main className="flex-1 flex flex-col w-full">
-      {/* 1. Top Hero Banner with Promotions */}
-      <Hero />
+      {/* === MOBILE SPECIFIC TOP SECTIONS === */}
+      <div className="md:hidden">
+        <MobileSearch />
+        <MobileCategoryBar />
+        <MobileHero />
+      </div>
+
+      {/* === DESKTOP SPECIFIC TOP SECTIONS === */}
+      <div className="hidden md:block">
+        <Hero />
+        <Categories />
+      </div>
       
-      {/* 2. Shop by Category Grid */}
-      <Categories />
-      
-      {/* 3. Featured Products Grid (Server Fetched) */}
+      {/* === SHARED SECTIONS (Mobile Horizontal Scroll / Desktop Grid) === */}
       <FeaturedProducts />
-      
-      {/* 4. Special Offers & Coupons */}
       <SpecialOffers />
     </main>
   );

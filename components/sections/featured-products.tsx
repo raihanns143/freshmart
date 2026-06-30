@@ -54,15 +54,18 @@ export async function FeaturedProducts() {
     <section className="py-16 bg-[#F8FAFC]">
       <div className="section-container">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-10">
+        <div className="flex items-center justify-between mb-6 md:mb-10">
           <div>
-            <h2 className="text-3xl font-800 text-gray-900 tracking-tight text-center sm:text-left">
+            <h2 className="text-xl md:text-3xl font-800 text-gray-900 tracking-tight text-left">
               Featured Products
             </h2>
-            <p className="text-gray-500 mt-2 font-medium text-center sm:text-left">
+            <p className="hidden md:block text-gray-500 mt-2 font-medium text-left">
               Handpicked fresh arrivals and weekly specials
             </p>
           </div>
+          <Link href="/shop" className="md:hidden text-sm font-bold text-primary">
+            See All
+          </Link>
           <div className="hidden lg:flex items-center gap-2 mt-4 sm:mt-0">
             {["All", "Organic", "Best Sellers", "On Sale"].map((filter, i) => (
               <button
@@ -79,10 +82,12 @@ export async function FeaturedProducts() {
           </div>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* Product Grid / Scroll */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 gap-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:overflow-visible pb-4 md:pb-0">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id} className="min-w-[180px] max-w-[200px] snap-start flex-shrink-0 md:min-w-0 md:max-w-none md:flex-shrink">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
 
