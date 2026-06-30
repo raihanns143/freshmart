@@ -14,22 +14,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "FreshMart Pro – Farm Fresh Groceries Delivered Fast",
+  title: "Raihan's FreshMart – Fresh Groceries, Delivered Fast",
   description: "Shop online for fresh produce, dairy, meat, and everyday essentials. Delivered straight to your door in minutes.",
   keywords: ["grocery", "fresh produce", "delivery", "supermarket", "food"],
   authors: [{ name: "FreshMart Team" }],
+  icons: {
+    icon: [
+      { url: "/favicon-icon.png", type: "image/png" },
+    ],
+    apple: "/favicon-icon.png",
+    shortcut: "/favicon-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://freshmart.com",
-    title: "FreshMart Pro",
-    description: "Farm Fresh Groceries Delivered Fast",
-    siteName: "FreshMart Pro",
+    url: "https://raihans.shop",
+    title: "Raihan's FreshMart",
+    description: "Fresh Groceries, Delivered Fast",
+    siteName: "Raihan's FreshMart",
+    images: [{ url: "/logo.png" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FreshMart Pro",
-    description: "Farm Fresh Groceries Delivered Fast",
+    title: "Raihan's FreshMart",
+    description: "Fresh Groceries, Delivered Fast",
+    images: ["/logo.png"],
   },
 };
 
