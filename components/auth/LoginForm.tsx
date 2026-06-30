@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -21,6 +22,8 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,7 +46,7 @@ export function LoginForm() {
         toast.error("Invalid email or password. Please try again.");
       } else {
         toast.success("Welcome back!");
-        router.push("/");
+        router.push(callbackUrl);
         router.refresh();
       }
     } catch {
@@ -54,7 +57,7 @@ export function LoginForm() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/" });
+    signIn("google", { callbackUrl });
   };
 
   return (
@@ -67,14 +70,15 @@ export function LoginForm() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-            <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center shadow-md">
-              <span className="text-white font-extrabold text-xl">F</span>
-            </div>
-            <div className="text-left">
-              <span className="block text-xl font-extrabold text-gray-900">FreshMart</span>
-              <span className="block text-xs text-gray-400">Fresh & Fast</span>
-            </div>
+          <Link href="/" className="inline-flex items-center justify-center mb-6">
+            <Image
+              src="/logo.png"
+              alt="Raihan's FreshMart"
+              width={140}
+              height={60}
+              className="h-12 w-auto object-contain"
+              priority
+            />
           </Link>
           <h1 className="text-2xl font-extrabold text-gray-900">Welcome back!</h1>
           <p className="text-gray-500 text-sm mt-1">Sign in to your account</p>

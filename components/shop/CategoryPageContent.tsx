@@ -1,9 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronRight, Loader2, SearchX } from "lucide-react";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Product } from "@/types";
 
@@ -65,6 +66,12 @@ const CATEGORY_META: Record<
     image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=1200&q=80",
     color: "from-pink-600/80",
   },
+  "pantry-staples": {
+    name: "Pantry Staples",
+    description: "Everyday essentials for your kitchen",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=80",
+    color: "from-amber-600/80",
+  },
   "health-beauty": {
     name: "Health & Beauty",
     description: "Wellness and personal care products",
@@ -73,52 +80,52 @@ const CATEGORY_META: Record<
   },
 };
 
-const MOCK_PRODUCTS: Product[] = Array.from({ length: 8 }, (_, i) => ({
-  id: `cat-${i}`,
-  name: ["Organic Apples", "Fresh Oranges", "Ripe Mangoes", "Sweet Grapes", "Juicy Pears", "Plump Blueberries", "Red Cherries", "Kiwi Fruit"][i],
-  slug: ["organic-apples", "fresh-oranges", "ripe-mangoes", "sweet-grapes", "juicy-pears", "plump-blueberries", "red-cherries", "kiwi-fruit"][i],
-  description: "Fresh quality produce",
-  shortDesc: "Premium quality",
-  category: {
-    id: "1",
-    name: "Fresh Fruits",
-    slug: "fresh-fruits",
-    description: null, image: null, color: null, icon: null, itemCount: 200, parentId: null,
-  },
-  categoryId: "1",
-  brand: null, brandId: null,
-  price: parseFloat((1.99 + i * 0.8).toFixed(2)),
-  originalPrice: null, discount: null,
-  stock: 50, inStock: true, unit: "piece",
-  images: [{
-    id: String(i),
-    url: [
-      "https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?w=400&q=70",
-      "https://images.unsplash.com/photo-1580502304784-8985b7eb7260?w=400&q=70",
-      "https://images.unsplash.com/photo-1553279768-865429fa0078?w=400&q=70",
-      "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=400&q=70",
-      "https://images.unsplash.com/photo-1514995669114-6081e934b693?w=400&q=70",
-      "https://images.unsplash.com/photo-1528821128474-27f963b062bf?w=400&q=70",
-      "https://images.unsplash.com/photo-1528821128474-27f963b062bf?w=400&q=70",
-      "https://images.unsplash.com/photo-1618897996318-5a901fa8b2b8?w=400&q=70",
-    ][i],
-    alt: "", isMain: true, order: 0,
-  }],
-  badge: i % 3 === 0 ? "Organic" : null,
-  badgeColor: i % 3 === 0 ? "green" : null,
-  tags: [], isFeatured: false, isActive: true,
-  rating: 4.0 + (i % 10) * 0.1,
-  reviewCount: 20 + i * 5, viewCount: 100, soldCount: 50,
-  specifications: [], createdAt: new Date(), updatedAt: new Date(),
-}));
-
 export function CategoryPageContent({ slug }: { slug: string }) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [sort, setSort] = useState("newest");
+
   const meta = CATEGORY_META[slug] || {
     name: slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
     description: "Browse our selection of fresh products",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=80",
     color: "from-green-600/80",
   };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`/api/products?category=${slug}&sort=${sort}&limit=24`);
+        if (!res.ok) throw new Error("Failed to fetch products");
+        const json = await res.json();
+        // Map DB product shape to frontend Product type
+        const mapped = (json.data || []).map((p: any) => ({
+          ...p,
+          stock: p.inStock ? 50 : 0,
+          tags: p.tags ? p.tags.split(",").filter(Boolean) : [],
+          specifications: [],
+          metaTitle: p.metaTitle ?? null,
+          metaDesc: p.metaDesc ?? null,
+          brand: p.brand ?? null,
+          brandId: p.brandId ?? null,
+          originalPrice: p.originalPrice ?? null,
+          discount: p.discount ?? null,
+          badge: p.badge ?? null,
+          badgeColor: p.badgeColor ?? null,
+          shortDesc: p.shortDesc ?? null,
+        }));
+        setProducts(mapped);
+      } catch (err: any) {
+        setError(err.message || "Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [slug, sort]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -130,6 +137,7 @@ export function CategoryPageContent({ slug }: { slug: string }) {
           fill
           className="object-cover"
           priority
+          unoptimized
         />
         <div
           className={`absolute inset-0 bg-gradient-to-r ${meta.color} to-black/30`}
@@ -157,21 +165,57 @@ export function CategoryPageContent({ slug }: { slug: string }) {
 
       {/* Products */}
       <div className="section-container py-12">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <h2 className="text-xl font-bold text-gray-900">
-            {MOCK_PRODUCTS.length} Products
+            {isLoading ? "Loading..." : `${products.length} Products`}
           </h2>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="appearance-none border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 bg-white outline-none focus:border-primary cursor-pointer"
+          >
+            <option value="newest">Newest</option>
+            <option value="popular">Most Popular</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
         </div>
-        <motion.div
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, staggerChildren: 0.05 }}
-        >
-          {MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </motion.div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <SearchX className="w-16 h-16 text-gray-200 mb-4" />
+            <p className="text-gray-500 text-lg font-medium">Failed to load products</p>
+            <p className="text-gray-400 text-sm mt-1">{error}</p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <ShoppingBag className="w-16 h-16 text-gray-200 mb-4" />
+            <p className="text-gray-500 text-lg font-medium">No products in this category yet</p>
+            <p className="text-gray-400 text-sm mt-1">Check back soon for new arrivals</p>
+            <Link
+              href="/shop"
+              className="mt-6 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-secondary transition-colors"
+            >
+              Browse All Products
+            </Link>
+          </div>
+        ) : (
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
   );

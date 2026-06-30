@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/hooks/use-cart";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, Lock, CheckCircle2, ChevronRight, CreditCard, Smartphone } from "lucide-react";
+import { ShieldCheck, Lock, CheckCircle2, ChevronRight, CreditCard, Smartphone, Tag, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
 type Step = "shipping" | "payment" | "confirmation";
@@ -27,8 +28,17 @@ const INITIAL_SHIPPING: ShippingForm = {
   address: "", apartment: "", city: "", state: "", zip: "", country: "US",
 };
 
+interface AppliedCoupon {
+  code: string;
+  description: string | null;
+  discount: number;
+  type: string;
+  value: number;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const { items, total, clearCart } = useCart();
   const [step, setStep] = useState<Step>("shipping");
   const [shipping, setShipping] = useState<ShippingForm>(INITIAL_SHIPPING);
@@ -36,14 +46,75 @@ export default function CheckoutPage() {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [isCouponLoading, setIsCouponLoading] = useState(false);
+
   // Order value computations
-  const tax = total * 0.08;
+  const couponDiscount = appliedCoupon?.discount ?? 0;
+  const subtotalAfterCoupon = Math.max(0, total - couponDiscount);
+  const tax = subtotalAfterCoupon * 0.08;
   const shippingFee = total > 50 || total === 0 ? 0 : 5.99;
-  const finalTotal = total + tax + shippingFee;
+  const finalTotal = subtotalAfterCoupon + tax + shippingFee;
+
+  // Redirect to login if not authenticated
+  if (status === "loading") {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    router.push("/login?callbackUrl=/checkout");
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500 mb-4">Please sign in to continue checkout.</p>
+          <Link href="/login?callbackUrl=/checkout" className="bg-primary text-white px-6 py-3 rounded-xl font-bold">
+            Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error("Please enter a coupon code.");
+      return;
+    }
+    setIsCouponLoading(true);
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponCode.trim(), subtotal: total }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Invalid coupon code.");
+      } else {
+        setAppliedCoupon(data);
+        toast.success(`Coupon applied! You save $${data.discount.toFixed(2)}`);
+      }
+    } catch {
+      toast.error("Failed to validate coupon. Please try again.");
+    } finally {
+      setIsCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    toast.info("Coupon removed.");
+  };
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Basic validation
     const required: (keyof ShippingForm)[] = ["firstName", "lastName", "email", "address", "city", "state", "zip"];
     const missing = required.filter((k) => !shipping[k].trim());
     if (missing.length > 0) {
@@ -62,6 +133,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map((i) => ({ productId: i.id, quantity: i.quantity })),
+          couponCode: appliedCoupon?.code || null,
           shippingAddress: {
             name: `${shipping.firstName} ${shipping.lastName}`,
             line1: shipping.address,
@@ -112,7 +184,7 @@ export default function CheckoutPage() {
             {(["shipping", "payment"] as Step[]).map((s, i) => (
               <React.Fragment key={s}>
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                  step === s ? "bg-primary text-white shadow-sm" : 
+                  step === s ? "bg-primary text-white shadow-sm" :
                   (step === "payment" && s === "shipping") ? "bg-green-50 text-green-700" : "bg-white text-gray-400 border border-gray-200"
                 }`}>
                   {step === "payment" && s === "shipping" ? (
@@ -281,7 +353,20 @@ export default function CheckoutPage() {
             </div>
 
             {/* Order Summary Sidebar */}
-            <OrderSummary items={items} total={total} tax={tax} shippingFee={shippingFee} finalTotal={finalTotal} />
+            <OrderSummary
+              items={items}
+              total={total}
+              tax={tax}
+              shippingFee={shippingFee}
+              finalTotal={finalTotal}
+              couponCode={couponCode}
+              setCouponCode={setCouponCode}
+              appliedCoupon={appliedCoupon}
+              couponDiscount={couponDiscount}
+              isCouponLoading={isCouponLoading}
+              onApplyCoupon={handleApplyCoupon}
+              onRemoveCoupon={handleRemoveCoupon}
+            />
           </div>
         )}
 
@@ -413,7 +498,20 @@ export default function CheckoutPage() {
             </div>
 
             {/* Order Summary Sidebar */}
-            <OrderSummary items={items} total={total} tax={tax} shippingFee={shippingFee} finalTotal={finalTotal} />
+            <OrderSummary
+              items={items}
+              total={total}
+              tax={tax}
+              shippingFee={shippingFee}
+              finalTotal={finalTotal}
+              couponCode={couponCode}
+              setCouponCode={setCouponCode}
+              appliedCoupon={appliedCoupon}
+              couponDiscount={couponDiscount}
+              isCouponLoading={isCouponLoading}
+              onApplyCoupon={handleApplyCoupon}
+              onRemoveCoupon={handleRemoveCoupon}
+            />
           </div>
         )}
 
@@ -434,7 +532,7 @@ export default function CheckoutPage() {
             )}
             <div className="bg-green-50 border border-green-100 rounded-2xl p-6 mb-8 text-left">
               <p className="text-sm text-gray-600">
-                You'll receive a confirmation email at <span className="font-bold text-gray-900">{shipping.email}</span> with your order details and live tracking information.
+                You&apos;ll receive a confirmation email at <span className="font-bold text-gray-900">{shipping.email}</span> with your order details and live tracking information.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -454,12 +552,23 @@ export default function CheckoutPage() {
 }
 
 /* ─── Inline Order Summary Component ─── */
-function OrderSummary({ items, total, tax, shippingFee, finalTotal }: {
+function OrderSummary({
+  items, total, tax, shippingFee, finalTotal,
+  couponCode, setCouponCode, appliedCoupon, couponDiscount,
+  isCouponLoading, onApplyCoupon, onRemoveCoupon,
+}: {
   items: any[];
   total: number;
   tax: number;
   shippingFee: number;
   finalTotal: number;
+  couponCode: string;
+  setCouponCode: (v: string) => void;
+  appliedCoupon: AppliedCoupon | null;
+  couponDiscount: number;
+  isCouponLoading: boolean;
+  onApplyCoupon: () => void;
+  onRemoveCoupon: () => void;
 }) {
   return (
     <div className="w-full lg:w-5/12">
@@ -488,12 +597,52 @@ function OrderSummary({ items, total, tax, shippingFee, finalTotal }: {
           ))}
         </div>
 
+        {/* Coupon Code Input */}
+        <div className="mb-6">
+          {appliedCoupon ? (
+            <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+              <Tag className="w-4 h-4 text-green-600 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-bold text-green-700">{appliedCoupon.code}</p>
+                <p className="text-xs text-green-600">{appliedCoupon.description || `${appliedCoupon.type === "PERCENTAGE" ? `${appliedCoupon.value}% off` : `$${appliedCoupon.value} off`}`}</p>
+              </div>
+              <button onClick={onRemoveCoupon} className="text-green-500 hover:text-red-500 transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Coupon code (e.g. WELCOME20)"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === "Enter" && onApplyCoupon()}
+                className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              />
+              <button
+                onClick={onApplyCoupon}
+                disabled={isCouponLoading}
+                className="bg-gray-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-700 transition-colors disabled:opacity-50 whitespace-nowrap"
+              >
+                {isCouponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* Totals */}
         <div className="border-t border-gray-100 pt-6 flex flex-col gap-3">
           <div className="flex justify-between text-gray-600 text-sm">
             <span>Subtotal</span>
             <span>${total.toFixed(2)}</span>
           </div>
+          {couponDiscount > 0 && (
+            <div className="flex justify-between text-green-600 text-sm font-semibold">
+              <span>Coupon Discount ({appliedCoupon?.code})</span>
+              <span>−${couponDiscount.toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex justify-between text-gray-600 text-sm">
             <span>Tax (8%)</span>
             <span>${tax.toFixed(2)}</span>
@@ -502,6 +651,12 @@ function OrderSummary({ items, total, tax, shippingFee, finalTotal }: {
             <span>Shipping</span>
             <span>{shippingFee === 0 ? <span className="text-green-600 font-semibold">Free</span> : `$${shippingFee.toFixed(2)}`}</span>
           </div>
+          {couponDiscount > 0 && (
+            <div className="flex justify-between text-sm text-gray-500 line-through">
+              <span>Original Total</span>
+              <span>${(total + tax + shippingFee).toFixed(2)}</span>
+            </div>
+          )}
           <div className="border-t border-gray-100 pt-4 flex justify-between items-end">
             <span className="text-lg font-bold text-gray-900">Total</span>
             <span className="text-3xl font-900 text-gray-900">${finalTotal.toFixed(2)}</span>
