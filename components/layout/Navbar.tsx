@@ -144,18 +144,14 @@ export function Navbar() {
           <div className="flex items-center gap-4 py-3">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-              <div className="w-10 h-10 bg-[#16c65b] rounded-xl flex items-center justify-center shadow-sm">
-                <ShoppingCart className="w-5 h-5 text-white" />
-              </div>
-              <div className="leading-tight">
-                <span className="block text-xl font-800 text-[#16c65b] leading-tight">
-                  FreshMart
-                </span>
-                <span className="block text-xs text-gray-400 font-400 leading-none">
-                  Fresh & Fast
-                </span>
-              </div>
-            </Link>
+            <Image
+              src="/logo.png"
+              alt="FreshMart Logo"
+              width={180}
+              height={50}
+              className="object-contain"
+            />
+          </Link>
 
             {/* Search Bar */}
             <div ref={searchRef} className="flex-1 relative max-w-2xl mx-auto">

@@ -68,17 +68,11 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-sm">
-              <ShoppingCart className="w-5 h-5 text-white" />
-            </div>
-            <div className="leading-tight hidden sm:block">
-              <span className={cn(
-                "block text-xl font-bold leading-tight transition-colors",
-                isScrolled ? "text-gray-900" : "text-gray-900 lg:text-white"
-              )}>
-                FreshMart
-              </span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="FreshMart Logo"
+              className="h-10 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Search */}
@@ -208,10 +202,11 @@ export function Header() {
             >
               <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <ShoppingCart className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-lg font-bold text-gray-900">FreshMart</span>
+                  <img
+                    src="/logo.png"
+                    alt="FreshMart Logo"
+                    className="h-8 w-auto object-contain"
+                  />
                 </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
