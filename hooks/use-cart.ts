@@ -29,6 +29,8 @@ interface CartState {
   clearCart: () => void;
   applyCoupon: (code: string, discount: number) => void;
   removeCoupon: () => void;
+  isInCart: (productId: string) => boolean;
+  getItemQuantity: (productId: string) => number;
 }
 
 function calcTotal(items: CartItem[], discount: number): number {
@@ -117,6 +119,12 @@ export const useCart = create<CartState>()(
           discountAmount: 0,
           total: calcTotal(state.items, 0),
         }));
+      },
+      isInCart: (productId: string) => {
+        return get().items.some((i) => i.id === productId);
+      },
+      getItemQuantity: (productId: string) => {
+        return get().items.find((i) => i.id === productId)?.quantity || 0;
       },
     }),
     {
