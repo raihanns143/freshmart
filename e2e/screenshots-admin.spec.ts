@@ -5,8 +5,8 @@
 import { test, expect, Page } from '@playwright/test';
 import path from 'path';
 
-const ADMIN_EMAIL = 'qa-admin@freshmart-test.com';
-const ADMIN_PASS = 'AdminTest123!';
+const ADMIN_EMAIL = 'freshmart-test.com';
+const ADMIN_PASS = '724426';
 const SCREENSHOT_DIR = path.join('QA', 'screenshots', 'desktop');
 
 // Helper: login as admin

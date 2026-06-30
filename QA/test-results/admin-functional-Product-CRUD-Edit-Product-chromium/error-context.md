@@ -373,8 +373,8 @@ Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
   5   |  */
   6   | import { test, expect, Page } from '@playwright/test';
   7   | 
-  8   | const ADMIN_EMAIL = 'qa-admin@freshmart-test.com';
-  9   | const ADMIN_PASS = 'AdminTest123!';
+  8   | const ADMIN_EMAIL = 'freshmart-test.com';
+  9   | const ADMIN_PASS = '724426';
   10  | 
   11  | async function loginAsAdmin(page: Page) {
   12  |   await page.goto('/admin/login');
