@@ -61,7 +61,7 @@ export default async function OrderDetailsPage({ params }: { params: { id: strin
   const currentStatusIndex = STATUS_STEPS.findIndex((s) => s.id === order.status);
   
   // A generic currency fallback since we are doing this server-side and don't have SettingsContext
-  const currency = { code: "BDT", symbol: "৳", exchangeRate: 1, decimalPlaces: 0 };
+  const currency: any = { code: "BDT", symbol: "৳", exchangeRate: 1, decimalPlaces: 0 };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
