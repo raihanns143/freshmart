@@ -31,7 +31,7 @@ export default async function OrderDetailsPage({ params }: { params: { id: strin
     redirect("/login");
   }
 
-  const order = await prisma.order.findUnique({
+  const order = await prisma.order.findFirst({
     where: {
       id: params.id,
       userId: user.id,
