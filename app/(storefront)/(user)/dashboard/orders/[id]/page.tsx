@@ -41,6 +41,7 @@ export default async function OrderDetailsPage({ params }: { params: { id: strin
         include: {
           product: {
             select: {
+              slug: true,
               images: {
                 take: 1,
                 where: { isMain: true },
