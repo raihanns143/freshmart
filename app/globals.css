@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* ─── FreshMart Blue Design System — Single Source of Truth ─────── */
+  /* All components reference these CSS variables. Never use hardcoded  */
+  /* green/emerald values in components — always reference these tokens. */
+
+  /* Primary Blue — all CTAs, focus rings, active states */
+  --color-primary:        #2563EB;   /* blue-600  WCAG AA on white ✓ */
+  --color-primary-hover:  #1D4ED8;   /* blue-700  darker hover     */
+  --color-primary-active: #1E40AF;   /* blue-800  pressed state    */
+  --color-primary-light:  #DBEAFE;   /* blue-100  tint backgrounds  */
+  
+  /* Numerical Scale */
+  --color-primary-50:     #EFF6FF;
+  --color-primary-100:    #DBEAFE;
+  --color-primary-200:    #BFDBFE;
+  --color-primary-300:    #93C5FD;
+  --color-primary-400:    #60A5FA;
+  --color-primary-500:    #3B82F6;
+  --color-primary-600:    #2563EB;
+  --color-primary-700:    #1D4ED8;
+  --color-primary-800:    #1E40AF;
+  --color-primary-900:    #1E3A8A;
+
+  /* Secondary Sky Blue — accents, info badges */
+  --color-secondary:       #38BDF8;  /* sky-400   */
+  --color-secondary-hover: #0EA5E9;  /* sky-500   */
+
+  /* Hero gradient (background-image, not a Tailwind utility) */
+  --gradient-hero: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #60A5FA 100%);
+
+  /* Accent Amber — sale stickers, special callouts */
+  --color-accent: #F59E0B;
+
+  /* Surface colors */
+  --color-background: #FFFFFF;
+  --color-gray-bg:    #F8FAFC;
+  --color-footer:     #0F172A;
+
+  /* Extended font weights */
+  --font-weight-800: 800;
+  --font-weight-900: 900;
+}
+
+/* ─── Base layer ─────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --background: var(--color-background);
+    --foreground: #0f172a;
+    --radius: 0.75rem;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* ─── Focus rings — WCAG AA compliant blue ── */
+  *:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* ─── Scrollbar ── */
+  ::-webkit-scrollbar       { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+}
+
+/* ─── Component layer ────────────────────────────────────────────── */
+@layer components {
+
+  /* Product card */
+  .product-card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm
+           hover:shadow-md hover:border-gray-200
+           transition-all duration-300 overflow-hidden flex flex-col;
+  }
+
+  .product-card-image {
+    @apply relative w-full aspect-square bg-gray-50 overflow-hidden;
+  }
+
+  /* Add-to-cart button — blue primary */
+  .btn-add-cart {
+    @apply w-9 h-9 flex items-center justify-center rounded-xl
+           bg-primary text-white
+           hover:bg-primary-700 hover:shadow active:scale-95
+           transition-all duration-200 shadow-sm
+           disabled:opacity-50 disabled:cursor-not-allowed
+           focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+}
+
+/* ─── Utility layer ─────────────────────────────────────────────── */
+@layer utilities {
+
+  /* Layout */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Typography weight helpers */
+  .font-600 { font-weight: 600; }
+  .font-700 { font-weight: 700; }
+  .font-800 { font-weight: 800; }
+  .font-900 { font-weight: 900; }
+
+  /* ─── Hero gradient utility ── */
+  .bg-hero-gradient {
+    background-image: var(--gradient-hero);
+  }
+
+  /* ─── Base form input — blue focus ── */
+  .fm-input {
+    @apply w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm
+           focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20
+           hover:border-gray-300
+           transition-all duration-200 placeholder:text-gray-400
+           disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  /* ─── Primary button — blue solid ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-primary text-white font-bold
+           px-6 py-3 rounded-xl
+           hover:bg-primary-700 hover:shadow-md active:scale-[0.98]
+           transition-all shadow-sm
+           disabled:opacity-60 disabled:cursor-not-allowed
+           focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* ─── Outline button — blue border ── */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           border-2 border-primary text-primary font-bold
+           px-6 py-3 rounded-xl
+           hover:bg-primary hover:text-white hover:shadow-md active:scale-[0.98]
+           transition-all
+           disabled:opacity-60 disabled:cursor-not-allowed
+           focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+
+  /* ─── Badge — blue tint ── */
+  .badge-primary {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
+           bg-primary-100 text-primary-700;
+  }
+
+  /* ─── Spinner — blue ── */
+  .spinner {
+    @apply inline-block w-5 h-5 border-2 border-primary-200 border-t-primary
+           rounded-full animate-spin;
+  }
+
+  /* ─── Legacy shorthands (keep for backward compat, now point to blue) ── */
+  .text-primary-500         { color: var(--color-primary); }
+  .hover\:text-primary-hover:hover { color: var(--color-primary-hover); }
+  .bg-primary-500           { background-color: var(--color-primary); }
+  .bg-primary-50            { background-color: var(--color-primary-50); }
+
+  /* ─── Coupon applied / success state — blue tint ── */
+  .coupon-applied {
+    @apply bg-primary-50 border border-primary-200 text-primary-700 rounded-xl px-4 py-3;
+  }
+
+  /* ─── Scrollbar utilities ── */
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+}

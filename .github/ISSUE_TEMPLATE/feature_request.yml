@@ -1,0 +1,68 @@
+name: ✨ Feature Request
+description: Suggest a new feature or improvement
+labels: ["enhancement", "needs-discussion"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please fill in the details below.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? Why do you need it?
+      placeholder: "As a customer, I can't compare two products side by side, so I have to go back and forth between pages..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this feature to work?
+      placeholder: "Add a 'Compare' button to product cards. When clicked, a comparison panel slides up..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you thought of any other ways to solve this? Why is your proposal better?
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      options:
+        - "🛍️ Storefront — Shopping"
+        - "🛒 Storefront — Cart / Checkout"
+        - "👤 Storefront — User Account"
+        - "🛠️ Admin Panel"
+        - "📊 Analytics / Reports"
+        - "🔐 Authentication"
+        - "📧 Email / Notifications"
+        - "💳 Payments"
+        - "⚙️ Platform / Infrastructure"
+        - "📝 Documentation"
+        - "🌍 Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockup
+    attributes:
+      label: Mockups / References
+      description: Add screenshots, mockups, or links to similar implementations.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before Submitting
+      options:
+        - label: I searched existing issues and feature requests — this is not a duplicate
+          required: true
+        - label: I checked the roadmap and this is not already planned
+          required: true

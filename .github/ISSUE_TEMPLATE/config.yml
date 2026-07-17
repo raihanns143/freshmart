@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/yourusername/freshmart/discussions
+    about: Ask general questions and discuss ideas in GitHub Discussions.
+  - name: 📖 Documentation
+    url: https://github.com/yourusername/freshmart/tree/main/docs
+    about: Read the project documentation.
+  - name: 🗺️ Roadmap
+    url: https://github.com/yourusername/freshmart/blob/main/docs/ROADMAP.md
+    about: Check the product roadmap before requesting features.

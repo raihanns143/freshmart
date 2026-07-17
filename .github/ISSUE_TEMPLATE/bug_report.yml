@@ -1,0 +1,84 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behaviour
+labels: ["bug", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug! Please fill in as much detail as possible.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug Summary
+      description: A clear and concise description of what the bug is.
+      placeholder: "When I click Add to Cart on the product page, the cart count doesn't update..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reproduce the behaviour.
+      placeholder: |
+        1. Go to '/product/orange-juice-1l'
+        2. Click 'Add to Cart'
+        3. See that the header cart count stays at 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behaviour
+      description: What should happen?
+      placeholder: "The cart count in the header should increase to 1"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behaviour
+      description: What actually happens?
+      placeholder: "The cart count stays at 0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / Console Errors
+      description: Paste screenshots or browser console errors here.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - "🔴 Critical — App is unusable"
+        - "🟠 High — Major feature broken"
+        - "🟡 Medium — Feature partially broken"
+        - "🟢 Low — Minor visual issue"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: "OS, browser, Node.js version (e.g., Windows 11 / Chrome 126 / Node 20)"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before Submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I can reproduce this consistently
+          required: true
