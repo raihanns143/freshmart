@@ -1,18 +1,91 @@
 import { MetadataRoute } from 'next';
+import { prisma } from '@/lib/prisma';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = 'https://raihans.shop';
+
+  // Fetch all active products
+  const products = await prisma.product.findMany({
+    where: { isActive: true },
+    select: { slug: true, updatedAt: true },
+  });
+
+  const productUrls = products.map((product) => ({
+    url: `${baseUrl}/product/${product.slug}`,
+    lastModified: product.updatedAt,
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }));
+
+  // Fetch all categories
+  const categories = await prisma.category.findMany({
+    select: { slug: true, updatedAt: true },
+  });
+
+  const categoryUrls = categories.map((category) => ({
+    url: `${baseUrl}/category/${category.slug}`,
+    lastModified: category.updatedAt,
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  // Fetch all brands
+  const brands = await prisma.brand.findMany({
+    select: { slug: true, updatedAt: true },
+  });
+
+  const brandUrls = brands.map((brand) => ({
+    url: `${baseUrl}/brand/${brand.slug}`,
+    lastModified: brand.updatedAt,
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
+
+  // Static routes
+  const staticRoutes = [
     {
-      url: 'http://localhost:3000',
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 1,
+      changeFrequency: 'daily' as const,
+      priority: 1.0,
     },
     {
-      url: 'http://localhost:3000/shop',
+      url: `${baseUrl}/search`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'hourly' as const,
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/faq`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
   ];
+
+  return [...staticRoutes, ...productUrls, ...categoryUrls, ...brandUrls];
 }

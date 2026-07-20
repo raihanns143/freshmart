@@ -11,11 +11,29 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const brand = await prisma.brand.findUnique({ where: { slug } });
-  if (!brand) return { title: "Brand Not Found" };
+  if (!brand) return { title: "Brand Not Found | Raihans Shop" };
   
+  const title = `${brand.name} | Raihans Shop`;
+  const description = `Shop products from ${brand.name} at Raihans Shop. Genuine products with fast delivery across Bangladesh.`;
+
   return {
-    title: `${brand.name} | FreshMart`,
-    description: `Shop products from ${brand.name} at FreshMart`,
+    title,
+    description,
+    alternates: {
+      canonical: `https://raihans.shop/brand/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://raihans.shop/brand/${slug}`,
+      images: brand.logo ? [{ url: brand.logo }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: brand.logo ? [brand.logo] : undefined,
+    }
   };
 }
 
@@ -50,8 +68,20 @@ export default async function BrandPage({ params }: Props) {
     specifications: [],
   })) as any[];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    "name": brand.name,
+    "url": `https://raihans.shop/brand/${brand.slug}`,
+    ...(brand.logo && { "logo": brand.logo })
+  };
+
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-24 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="section-container">
         {/* Brand Header */}
         <div className="bg-white rounded-3xl p-8 md:p-12 mb-10 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-8">

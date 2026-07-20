@@ -1,7 +1,10 @@
-import { logActivity } from "@/lib/logger";
 "use server";
 
 import { auth } from "@/auth";
+import { logActivity } from "@/lib/logger";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
+import type { ActionResult } from "@/types/admin";
 
 async function safeAuditLog(data: any) {
   const session = await auth();
@@ -15,10 +18,6 @@ async function safeAuditLog(data: any) {
     status: "SUCCESS"
   });
 }
-
-import { prisma } from "@/lib/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
-import type { ActionResult } from "@/types/admin";
 
 const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN", "MANAGER"];
 

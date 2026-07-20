@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/api/', '/checkout'],
+      disallow: ['/admin/', '/dashboard/', '/api/', '/auth/', '/private/'],
     },
-    sitemap: 'http://localhost:3000/sitemap.xml',
+    sitemap: 'https://raihans.shop/sitemap.xml',
   };
 }

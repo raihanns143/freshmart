@@ -8,15 +8,28 @@ async function main() {
   // 1. Settings (Upsert)
   console.log("Seeding localized settings...");
   const defaultSettings = [
-    { key: "SITE_NAME", value: "FreshMart Bangladesh", description: "Name of the website" },
-    { key: "CONTACT_EMAIL", value: "support@freshmart.com.bd", description: "Public contact email" },
+    { key: "SITE_NAME", value: "Raihans Shop", description: "Name of the website" },
+    { key: "CONTACT_EMAIL", value: "support@raihans.shop", description: "Public contact email" },
     { key: "CONTACT_PHONE", value: "+880 1700 000000", description: "Public contact phone" },
     { key: "CURRENCY", value: "BDT", description: "Currency code (e.g. BDT)" },
     { key: "CURRENCY_SYMBOL", value: "৳", description: "Currency symbol for UI" },
     { key: "TAX_RATE", value: "5", description: "Tax rate percentage" },
     { key: "FREE_SHIPPING_THRESHOLD", value: "1000", description: "Order amount for free shipping" },
     { key: "SHIPPING_FEE", value: "60", description: "Standard shipping fee" },
-    { key: "STORE_ADDRESS", value: "Gulshan-1, Dhaka, Bangladesh", description: "Physical store address" },
+    { key: "STORE_ADDRESS", value: "Rajshahi, Bangladesh", description: "Physical store address" },
+    { key: "SEO_TITLE", value: "Raihans Shop | Online Grocery Store in Bangladesh", description: "Default SEO Title" },
+    { key: "SEO_DESCRIPTION", value: "Shop fresh vegetables, fruits, fish, meat, rice, dairy products, snacks and daily essentials online from Raihans Shop. Fast delivery and Cash on Delivery available across Bangladesh.", description: "Default SEO Description" },
+    { key: "SEO_KEYWORDS", value: "Raihans Shop,Online Grocery Bangladesh,Grocery Delivery Bangladesh", description: "Default SEO Keywords" },
+    { key: "SEO_OG_IMAGE", value: "/logo.png", description: "OpenGraph Image" },
+    { key: "SEO_TWITTER_IMAGE", value: "/logo.png", description: "Twitter Image" },
+    { key: "GOOGLE_SITE_VERIFICATION", value: "", description: "Google Search Console Verification" },
+    { key: "BING_SITE_VERIFICATION", value: "", description: "Bing Webmaster Verification" },
+    { key: "YANDEX_SITE_VERIFICATION", value: "", description: "Yandex Webmaster Verification" },
+    { key: "FACEBOOK_DOMAIN_VERIFICATION", value: "", description: "Facebook Domain Verification" },
+    { key: "GOOGLE_ANALYTICS_ID", value: "", description: "Google Analytics Measurement ID (G-XXXX)" },
+    { key: "GOOGLE_TAG_MANAGER_ID", value: "", description: "Google Tag Manager ID (GTM-XXXX)" },
+    { key: "FACEBOOK_PIXEL_ID", value: "", description: "Facebook Pixel ID" },
+    { key: "MICROSOFT_CLARITY_ID", value: "", description: "Microsoft Clarity Project ID" },
   ];
   for (const s of defaultSettings) {
     await prisma.setting.upsert({

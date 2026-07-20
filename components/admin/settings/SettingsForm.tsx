@@ -41,6 +41,8 @@ export function SettingsForm({ initialSettings, currencies }: SettingsFormProps)
     { id: "shipping", label: "Shipping", icon: Truck },
     { id: "payment", label: "Payment", icon: CreditCard },
     { id: "smtp", label: "Email / SMTP", icon: Mail },
+    { id: "seo", label: "SEO Settings", icon: Store },
+    { id: "tracking", label: "Analytics & Tracking", icon: Store },
   ];
 
   return (
@@ -230,6 +232,115 @@ export function SettingsForm({ initialSettings, currencies }: SettingsFormProps)
                     value={settings.smtpPassword ?? ""}
                     onChange={(e) => handleChange("smtpPassword", e.target.value)}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono"
+                  />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "seo" && (
+              <div className="space-y-4 max-w-xl">
+                <h2 className="text-lg font-semibold text-white mb-4">SEO & Metadata</h2>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Default SEO Title</label>
+                  <input
+                    value={settings.SEO_TITLE ?? ""}
+                    onChange={(e) => handleChange("SEO_TITLE", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Default SEO Description</label>
+                  <textarea
+                    value={settings.SEO_DESCRIPTION ?? ""}
+                    onChange={(e) => handleChange("SEO_DESCRIPTION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 h-24"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">SEO Keywords (Comma Separated)</label>
+                  <input
+                    value={settings.SEO_KEYWORDS ?? ""}
+                    onChange={(e) => handleChange("SEO_KEYWORDS", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">OpenGraph Image URL</label>
+                  <input
+                    value={settings.SEO_OG_IMAGE ?? ""}
+                    onChange={(e) => handleChange("SEO_OG_IMAGE", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Twitter Image URL</label>
+                  <input
+                    value={settings.SEO_TWITTER_IMAGE ?? ""}
+                    onChange={(e) => handleChange("SEO_TWITTER_IMAGE", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <h3 className="text-sm font-semibold text-white mt-6 mb-2">Webmaster Tools</h3>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Google Site Verification Content</label>
+                  <input
+                    value={settings.GOOGLE_SITE_VERIFICATION ?? ""}
+                    onChange={(e) => handleChange("GOOGLE_SITE_VERIFICATION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Bing Site Verification</label>
+                  <input
+                    value={settings.BING_SITE_VERIFICATION ?? ""}
+                    onChange={(e) => handleChange("BING_SITE_VERIFICATION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "tracking" && (
+              <div className="space-y-4 max-w-xl">
+                <h2 className="text-lg font-semibold text-white mb-4">Analytics & Tracking</h2>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Google Analytics Measurement ID (G-XXXX)</label>
+                  <input
+                    value={settings.GOOGLE_ANALYTICS_ID ?? ""}
+                    onChange={(e) => handleChange("GOOGLE_ANALYTICS_ID", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Google Tag Manager ID (GTM-XXXX)</label>
+                  <input
+                    value={settings.GOOGLE_TAG_MANAGER_ID ?? ""}
+                    onChange={(e) => handleChange("GOOGLE_TAG_MANAGER_ID", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Facebook Pixel ID</label>
+                  <input
+                    value={settings.FACEBOOK_PIXEL_ID ?? ""}
+                    onChange={(e) => handleChange("FACEBOOK_PIXEL_ID", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Microsoft Clarity Project ID</label>
+                  <input
+                    value={settings.MICROSOFT_CLARITY_ID ?? ""}
+                    onChange={(e) => handleChange("MICROSOFT_CLARITY_ID", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Facebook Domain Verification</label>
+                  <input
+                    value={settings.FACEBOOK_DOMAIN_VERIFICATION ?? ""}
+                    onChange={(e) => handleChange("FACEBOOK_DOMAIN_VERIFICATION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
               </div>

@@ -7,17 +7,30 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resolvedParams = await params;
   const product = await prisma.product.findUnique({
     where: { slug: resolvedParams.slug },
-    select: { name: true, shortDesc: true, description: true, metaTitle: true, metaDesc: true, images: { select: { url: true }, take: 1 } },
+    select: { name: true, shortDesc: true, description: true, metaTitle: true, metaDesc: true, images: { select: { url: true }, take: 1 }, category: { select: { name: true } } },
   });
 
-  if (!product) return { title: "Product Not Found | FreshMart" };
+  if (!product) return { title: "Product Not Found | Raihans Shop" };
 
   return {
-    title: product.metaTitle || `${product.name} | FreshMart`,
-    description: product.metaDesc || product.shortDesc || product.description || "Shop fresh groceries at FreshMart.",
+    title: product.metaTitle || product.name,
+    description: product.metaDesc || product.shortDesc || product.description?.substring(0, 160) || `Buy ${product.name} at Raihans Shop.`,
+    alternates: {
+      canonical: `https://raihans.shop/product/${resolvedParams.slug}`,
+    },
     openGraph: {
+      title: product.metaTitle || product.name,
+      description: product.metaDesc || product.shortDesc || product.description?.substring(0, 160),
+      url: `https://raihans.shop/product/${resolvedParams.slug}`,
+      type: 'article',
       images: product.images[0]?.url ? [{ url: product.images[0].url }] : undefined,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.metaTitle || product.name,
+      description: product.metaDesc || product.shortDesc || product.description?.substring(0, 160),
+      images: product.images[0]?.url ? [product.images[0].url] : undefined,
+    }
   };
 }
 
@@ -92,8 +105,58 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     },
   });
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.images.map(img => img.url),
+    "description": product.description || product.shortDesc,
+    "sku": product.id,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand?.name || "Raihans Shop"
+    },
+    "category": product.category?.name,
+    "offers": {
+      "@type": "Offer",
+      "url": `https://raihans.shop/product/${product.slug}`,
+      "priceCurrency": "BDT",
+      "price": product.price,
+      "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Raihans Shop"
+      }
+    },
+    ...(product.reviewCount > 0 && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": product.rating,
+        "reviewCount": product.reviewCount
+      },
+      "review": product.reviews.map(review => ({
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": review.rating
+        },
+        "author": {
+          "@type": "Person",
+          "name": review.user?.name || "Anonymous"
+        },
+        "reviewBody": review.comment || ""
+      }))
+    })
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ProductDetailView 
         product={product} 
         relatedProducts={relatedProducts}
