@@ -1,6 +1,21 @@
+import { logActivity } from "@/lib/logger";
 "use server";
 
 import { auth } from "@/auth";
+
+async function safeAuditLog(data: any) {
+  const session = await auth();
+  await logActivity({
+    userId: data.userId || (session?.user as any)?.id,
+    role: (session?.user as any)?.role || "ADMIN",
+    action: data.action,
+    entityType: data.entity,
+    entityId: data.entityId,
+    details: data.details,
+    status: "SUCCESS"
+  });
+}
+
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";

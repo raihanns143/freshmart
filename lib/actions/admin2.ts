@@ -5,12 +5,22 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { ActionResult } from "@/types/admin";
+import { logActivity } from "@/lib/logger";
 
 const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN", "MANAGER"];
 
-/** Best-effort audit log — silently ignored if userId FK is stale */
-async function safeAuditLog(data: Parameters<typeof prisma.auditLog.create>[0]["data"]) {
-  try { await prisma.auditLog.create({ data }); } catch (_) { /* non-critical */ }
+/** Best-effort audit log */
+async function safeAuditLog(data: any) {
+  const session = await auth();
+  await logActivity({
+    userId: data.userId || (session?.user as any)?.id,
+    role: (session?.user as any)?.role || "ADMIN",
+    action: data.action,
+    entityType: data.entity,
+    entityId: data.entityId,
+    details: data.details,
+    status: "SUCCESS"
+  });
 }
 
 async function requireAdmin() {

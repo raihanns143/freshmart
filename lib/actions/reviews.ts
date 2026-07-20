@@ -46,7 +46,7 @@ export async function createReview(data: z.infer<typeof CreateReviewSchema>): Pr
     }
 
     // 3. Create the review
-    await prisma.review.create({
+    const review = await prisma.review.create({
       data: {
         userId,
         productId: parsed.productId,
@@ -56,6 +56,16 @@ export async function createReview(data: z.infer<typeof CreateReviewSchema>): Pr
         status: "APPROVED", // Auto-approving for this demo, could be PENDING in real world
         verified: true, // They passed the purchase check
       }
+    });
+
+    const { logActivity } = await import("@/lib/logger");
+    await logActivity({
+      userId,
+      role: (session.user as any).role || "USER",
+      action: "CREATE_REVIEW",
+      entityType: "Review",
+      entityId: review.id,
+      details: `User wrote a ${parsed.rating}-star review for product ${parsed.productId}`,
     });
 
     // 4. Recalculate average rating for the product

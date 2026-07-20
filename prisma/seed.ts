@@ -49,7 +49,7 @@ async function main() {
   console.log("Creating/verifying admin user...");
   const adminEmail = "fresh-mart@gmail.com";
   const hashedAdminPassword = await bcrypt.hash("724426", 10);
-  await prisma.user.upsert({
+  const adminUser = await prisma.user.upsert({
     where: { email: adminEmail },
     update: { password: hashedAdminPassword, role: "SUPER_ADMIN" },
     create: {
@@ -327,6 +327,61 @@ async function main() {
       }
     });
   }
+
+  // Generate 150 random Audit Logs for testing
+  console.log("Generating 150 random audit logs...");
+  const users = await prisma.user.findMany({ where: { role: { not: "SUPER_ADMIN" } } });
+  const adminAndUsers = [
+    { id: adminUser.id, role: "SUPER_ADMIN" },
+    ...users.map((u: any) => ({ id: u.id, role: "CUSTOMER" }))
+  ];
+
+  const possibleActions = [
+    "LOGIN", "LOGOUT", "REGISTER", 
+    "CREATE_PRODUCT", "UPDATE_PRODUCT", "DELETE_PRODUCT", 
+    "PLACE_ORDER", "UPDATE_ORDER_STATUS", "CANCEL_ORDER",
+    "UPDATE_PROFILE", "CHANGE_PASSWORD", "CREATE_REVIEW",
+    "UPDATE_SETTINGS"
+  ];
+
+  const possibleEntities = [
+    "Auth", "User", "Product", "Order", "Review", "Setting", "Category"
+  ];
+
+  const possibleStatuses = ["SUCCESS", "SUCCESS", "SUCCESS", "SUCCESS", "FAILED", "PENDING"];
+
+  const logsToCreate = [];
+  const now = new Date();
+
+  for (let i = 0; i < 150; i++) {
+    const randomUser = adminAndUsers[Math.floor(Math.random() * adminAndUsers.length)];
+    const randomAction = possibleActions[Math.floor(Math.random() * possibleActions.length)];
+    const randomEntity = possibleEntities[Math.floor(Math.random() * possibleEntities.length)];
+    const randomStatus = possibleStatuses[Math.floor(Math.random() * possibleStatuses.length)];
+    
+    // Spread dates over the last 30 days
+    const randomDaysAgo = Math.floor(Math.random() * 30);
+    const logDate = new Date(now.getTime() - (randomDaysAgo * 24 * 60 * 60 * 1000));
+    // Random hour/minute
+    logDate.setHours(Math.floor(Math.random() * 24));
+    logDate.setMinutes(Math.floor(Math.random() * 60));
+
+    logsToCreate.push({
+      userId: randomUser.id,
+      role: randomUser.role,
+      action: randomAction,
+      entity: randomEntity,
+      entityId: `mock_${Math.floor(Math.random() * 10000)}`,
+      status: randomStatus,
+      details: `Mock seeded log for ${randomAction}`,
+      createdAt: logDate,
+    });
+  }
+
+  await prisma.auditLog.createMany({
+    data: logsToCreate,
+  });
+  console.log("Seeded 150 audit logs.");
 
   console.log("Seeding complete! 🇧🇩");
 }

@@ -37,6 +37,16 @@ export async function POST(req: Request) {
       },
     });
 
+    const { logActivity } = await import("@/lib/logger");
+    await logActivity({
+      userId: user.id,
+      role: user.role,
+      action: "REGISTER",
+      entityType: "User",
+      entityId: user.id,
+      details: `User registered with email ${email}`,
+    });
+
     return NextResponse.json(
       { user: { id: user.id, name: user.name, email: user.email } },
       { status: 201 }

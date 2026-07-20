@@ -66,7 +66,7 @@ function StatCard({ title, value, change, icon, color }: StatCardProps) {
   );
 }
 
-export function AdminDashboard({ stats, recentOrders }: { stats: any, recentOrders: any[] }) {
+export function AdminDashboard({ stats, recentOrders, recentLogs }: { stats: any, recentOrders: any[], recentLogs?: any[] }) {
   const { settings } = useSettings();
   return (
     <div className="space-y-6">
@@ -167,39 +167,78 @@ export function AdminDashboard({ stats, recentOrders }: { stats: any, recentOrde
         </div>
       </div>
 
-      {/* Recent Orders */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-          <h3 className="text-sm font-semibold text-white">Recent Orders</h3>
-          <a href="/admin/orders" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors">View All →</a>
+      {/* Recent Activity & Orders Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Orders */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+            <h3 className="text-sm font-semibold text-white">Recent Orders</h3>
+            <a href="/admin/orders" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors">View All →</a>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-800">
+                  {["Order ID", "Customer", "Amount", "Status"].map(h => (
+                    <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/50">
+                {recentOrders.length === 0 ? (
+                  <tr><td colSpan={4} className="px-5 py-8 text-center text-slate-500">No orders found.</td></tr>
+                ) : (
+                  recentOrders.map((order: any) => (
+                    <tr key={order.id} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="px-5 py-3.5 text-sm font-mono text-emerald-400">#{order.orderNumber}</td>
+                      <td className="px-5 py-3.5 text-sm text-slate-300">{order.user?.name || order.user?.email || "Guest"}</td>
+                      <td className="px-5 py-3.5 text-sm text-white font-medium">{formatPrice(order.total, settings.activeCurrency)}</td>
+                      <td className="px-5 py-3.5">
+                        <span className={`inline-flex text-xs px-2.5 py-1 rounded-full border font-medium ${statusColors[order.status] || "bg-slate-800 text-slate-400"}`}>{order.status}</span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-800">
-                {["Order ID", "Customer", "Amount", "Status", "Date"].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/50">
-              {recentOrders.length === 0 ? (
-                <tr><td colSpan={5} className="px-5 py-8 text-center text-slate-500">No orders found.</td></tr>
-              ) : (
-                recentOrders.map(order => (
-                  <tr key={order.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-5 py-3.5 text-sm font-mono text-emerald-400">#{order.orderNumber}</td>
-                    <td className="px-5 py-3.5 text-sm text-slate-300">{order.user?.name || order.user?.email || "Guest"}</td>
-                    <td className="px-5 py-3.5 text-sm text-white font-medium">{formatPrice(order.total, settings.activeCurrency)}</td>
-                    <td className="px-5 py-3.5">
-                      <span className={`inline-flex text-xs px-2.5 py-1 rounded-full border font-medium ${statusColors[order.status] || "bg-slate-800 text-slate-400"}`}>{order.status}</span>
-                    </td>
-                    <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(order.createdAt).toLocaleDateString()}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+
+        {/* Recent Activity Logs */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+            <h3 className="text-sm font-semibold text-white">Recent Activities</h3>
+            <a href="/admin/logs" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors">View All →</a>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-800">
+                  {["User", "Action", "Entity", "Time"].map(h => (
+                    <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/50">
+                {!recentLogs || recentLogs.length === 0 ? (
+                  <tr><td colSpan={4} className="px-5 py-8 text-center text-slate-500">No recent activity.</td></tr>
+                ) : (
+                  recentLogs.slice(0, 5).map((log: any) => (
+                    <tr key={log.id} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="px-5 py-3.5 text-sm text-slate-300">{log.user?.name || log.user?.email || "System"}</td>
+                      <td className="px-5 py-3.5">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide text-slate-400 bg-slate-500/10">
+                          {log.action.replace(/_/g, " ")}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-slate-300">{log.entity}</td>
+                      <td className="px-5 py-3.5 text-xs text-slate-400">{new Date(log.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

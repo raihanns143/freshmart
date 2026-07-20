@@ -52,5 +52,32 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         };
       }
     })
-  ]
+  ],
+  events: {
+    async signIn(message) {
+      if (message.user) {
+        const { logActivity } = await import("@/lib/logger");
+        await logActivity({
+          userId: message.user.id,
+          role: (message.user as any).role || "USER",
+          action: "LOGIN",
+          entityType: "Auth",
+          details: `Logged in via ${message.account?.provider || 'credentials'}`,
+        });
+      }
+    },
+    async signOut(message: any) {
+      const user = message?.session?.user || message?.token;
+      if (user) {
+        const { logActivity } = await import("@/lib/logger");
+        await logActivity({
+          userId: user.id || user.sub,
+          role: user.role || "USER",
+          action: "LOGOUT",
+          entityType: "Auth",
+          details: "Logged out",
+        });
+      }
+    }
+  }
 });

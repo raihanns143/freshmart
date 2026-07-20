@@ -413,16 +413,20 @@ model Setting {
 model AuditLog {
   id        String   @id @default(cuid())
   userId    String?
+  role      String?
   action    String
   entity    String
   entityId  String?
+  status    String   @default("SUCCESS")
   details   String?
   ipAddress String?
+  userAgent String?
   createdAt DateTime @default(now())
   user      User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([entity, entityId])
+  @@index([createdAt])
   @@map("audit_logs")
 }
 

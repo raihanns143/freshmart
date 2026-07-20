@@ -1,6 +1,21 @@
+import { logActivity } from "@/lib/logger";
 "use server";
 
 import { auth } from "@/auth";
+
+async function safeAuditLog(data: any) {
+  const session = await auth();
+  await logActivity({
+    userId: data.userId || (session?.user as any)?.id,
+    role: (session?.user as any)?.role || "ADMIN",
+    action: data.action,
+    entityType: data.entity,
+    entityId: data.entityId,
+    details: data.details,
+    status: "SUCCESS"
+  });
+}
+
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { ActionResult } from "@/types/admin";
@@ -71,17 +86,13 @@ export async function createProduct(data: any): Promise<ActionResult> {
     });
 
     // Audit log — best-effort, never crash on FK issues
-    try {
-      await prisma.auditLog.create({
-        data: {
+    await safeAuditLog({
           userId: (session.user as any).id,
           action: "CREATE_PRODUCT",
           entity: "Product",
           entityId: product.id,
           details: JSON.stringify({ name: product.name }),
-        }
-      });
-    } catch (_) { /* auditLog is non-critical */ }
+        });
 
     revalidatePath(`/product/${product.slug}`, "page");
     revalidatePath("/shop");
@@ -202,16 +213,12 @@ export async function updateProduct(id: string, data: any): Promise<ActionResult
     }
 
     // Audit log — best-effort, never crash on FK issues
-    try {
-      await prisma.auditLog.create({
-        data: {
+    await safeAuditLog({
           userId: (session.user as any).id,
           action: "UPDATE_PRODUCT",
           entity: "Product",
           entityId: id,
-        }
-      });
-    } catch (_) { /* auditLog is non-critical */ }
+        });
 
     revalidatePath(`/product/${data.slug}`, "page");
     revalidatePath("/shop");
@@ -235,16 +242,12 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     await prisma.product.delete({ where: { id } });
 
     // Audit log — best-effort
-    try {
-      await prisma.auditLog.create({
-        data: {
+    await safeAuditLog({
           userId: (session.user as any).id,
           action: "DELETE_PRODUCT",
           entity: "Product",
           entityId: id,
-        }
-      });
-    } catch (_) { /* auditLog is non-critical */ }
+        });
     if (product) {
       revalidatePath(`/product/${product.slug}`, "page");
     }
@@ -267,17 +270,13 @@ export async function updateDisplayOrder(id: string, displayOrder: number): Prom
     });
     
     // Audit log — best-effort
-    try {
-      await prisma.auditLog.create({
-        data: {
+    await safeAuditLog({
           userId: (session.user as any).id,
           action: "UPDATE_DISPLAY_ORDER",
           entity: "Product",
           entityId: id,
           details: JSON.stringify({ displayOrder }),
-        },
-      });
-    } catch (_) { /* auditLog is non-critical */ }
+        },);
 
     revalidatePath("/admin/products");
     revalidatePath("/");

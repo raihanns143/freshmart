@@ -69,6 +69,10 @@ export default async function Dashboard() {
         orderBy: { createdAt: "desc" },
         take: 50,
       },
+      auditLogs: {
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      }
     },
   });
 

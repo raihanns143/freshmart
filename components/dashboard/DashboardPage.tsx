@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import {
   ShoppingBag, Heart, MapPin, Settings, LogOut,
   Package, Clock, ChevronRight, Star, User, Lock, Edit3,
-  Bell, Tag, MessageSquare, CheckCircle, AlertCircle
+  Bell, Tag, MessageSquare, CheckCircle, AlertCircle, Activity
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   CANCELLED: { label: "Cancelled", className: "bg-red-100 text-red-700" },
 };
 
-type Tab = "overview" | "orders" | "wishlist" | "addresses" | "reviews" | "coupons" | "notifications" | "security" | "settings";
+type Tab = "overview" | "orders" | "wishlist" | "addresses" | "reviews" | "coupons" | "notifications" | "activity" | "security" | "settings";
 
 const NAV_ITEMS: { key: Tab; label: string; icon: any }[] = [
   { key: "overview", label: "Overview", icon: User },
@@ -37,6 +37,7 @@ const NAV_ITEMS: { key: Tab; label: string; icon: any }[] = [
   { key: "reviews", label: "Reviews", icon: Star },
   { key: "coupons", label: "Coupons", icon: Tag },
   { key: "notifications", label: "Notifications", icon: Bell },
+  { key: "activity", label: "My Activity", icon: Activity },
   { key: "security", label: "Security", icon: Lock },
   { key: "settings", label: "Settings", icon: Settings },
 ];
@@ -486,6 +487,55 @@ export function DashboardPage({ initialUser, activeCoupons = [] }: { initialUser
                           <p className="text-xs text-gray-400 mt-1">{new Date(n.createdAt).toLocaleDateString()}</p>
                         </div>
                         {!n.read && <div className="w-2 h-2 bg-primary-500 rounded-full mt-1 flex-shrink-0" />}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* ACTIVITY */}
+            {activeTab === "activity" && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <h2 className="text-xl font-bold text-gray-900 mb-4 sm:mb-5">My Activity</h2>
+                {(initialUser.auditLogs || []).length === 0 ? (
+                  <div className="bg-white rounded-2xl shadow-sm p-8 text-center border border-gray-100">
+                    <Activity className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                    <p className="text-gray-400">No activity yet</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {(initialUser.auditLogs || []).map((log: any) => (
+                      <div key={log.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center flex-shrink-0">
+                          <Activity className="w-5 h-5 text-primary-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                            <h3 className="font-semibold text-gray-900 truncate uppercase">
+                              {log.action.replace(/_/g, " ")}
+                            </h3>
+                            <span className="text-xs text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded-md w-fit">
+                              {new Date(log.createdAt).toLocaleString()}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {log.details || `Performed action on ${log.entity}`}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded text-blue-700 bg-blue-50 border border-blue-100">
+                              {log.entity}
+                            </span>
+                            <span className={cn(
+                              "text-[10px] uppercase font-bold px-2 py-0.5 rounded border",
+                              log.status === "SUCCESS" ? "text-emerald-700 bg-emerald-50 border-emerald-100" :
+                              log.status === "FAILED" ? "text-red-700 bg-red-50 border-red-100" :
+                              "text-amber-700 bg-amber-50 border-amber-100"
+                            )}>
+                              {log.status}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>

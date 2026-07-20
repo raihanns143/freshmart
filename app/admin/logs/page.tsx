@@ -8,15 +8,29 @@ export const dynamic = "force-dynamic";
 export default async function AdminLogsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; search?: string; action?: string }>;
+  searchParams: Promise<{ page?: string; search?: string; action?: string; role?: string; status?: string; date?: string }>;
 }) {
   const sp = await searchParams;
   const page = parseInt(sp.page ?? "1");
-  const pageSize = 50;
+  const pageSize = 20;
   const skip = (page - 1) * pageSize;
 
   const where: any = {};
   if (sp.action) where.action = sp.action;
+  if (sp.role) where.role = sp.role;
+  if (sp.status) where.status = sp.status;
+  
+  if (sp.date) {
+    const startDate = new Date(sp.date);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(sp.date);
+    endDate.setHours(23, 59, 59, 999);
+    where.createdAt = {
+      gte: startDate,
+      lte: endDate,
+    };
+  }
+
   if (sp.search) {
     where.OR = [
       { user: { name: { contains: sp.search, mode: "insensitive" } } },
@@ -26,7 +40,7 @@ export default async function AdminLogsPage({
     ];
   }
 
-  const [logs, total, actionStats] = await Promise.all([
+  const [logs, total, actionStats, roleStats] = await Promise.all([
     prisma.auditLog.findMany({
       where,
       skip,
@@ -38,10 +52,16 @@ export default async function AdminLogsPage({
     }),
     prisma.auditLog.count({ where }),
     prisma.auditLog.groupBy({ by: ["action"], _count: { id: true } }),
+    prisma.auditLog.groupBy({ by: ["role"], _count: { id: true } }),
   ]);
 
   const actionCounts: Record<string, number> = {};
   for (const a of actionStats) actionCounts[a.action] = a._count.id;
+  
+  const roleCounts: Record<string, number> = {};
+  for (const r of roleStats) {
+    if (r.role) roleCounts[r.role] = r._count.id;
+  }
 
   return (
     <ActivityLogsManager
@@ -51,7 +71,11 @@ export default async function AdminLogsPage({
       pageSize={pageSize}
       search={sp.search}
       actionFilter={sp.action}
+      roleFilter={sp.role}
+      statusFilter={sp.status}
+      dateFilter={sp.date}
       actionCounts={actionCounts}
+      roleCounts={roleCounts}
     />
   );
 }

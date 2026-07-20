@@ -13,6 +13,7 @@ export default async function DashboardPage() {
     pendingOrders,
     recentOrders,
     allOrders,
+    recentLogs,
   ] = await Promise.all([
     prisma.user.count({ where: { role: { in: ["USER", "CUSTOMER"] } } }),
     prisma.product.count(),
@@ -24,6 +25,11 @@ export default async function DashboardPage() {
       include: { user: { select: { name: true, email: true } } },
     }),
     prisma.order.findMany({ select: { total: true, status: true, createdAt: true } }),
+    prisma.auditLog.findMany({
+      take: 10,
+      orderBy: { createdAt: "desc" },
+      include: { user: { select: { name: true, email: true } } },
+    }),
   ]);
 
   const totalRevenue = allOrders
@@ -49,6 +55,7 @@ export default async function DashboardPage() {
         thisMonthRevenue: currentMonthRevenue,
       }}
       recentOrders={recentOrders}
+      recentLogs={recentLogs as any}
     />
   );
 }

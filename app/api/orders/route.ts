@@ -196,6 +196,18 @@ export async function POST(request: NextRequest) {
       return newOrder;
     });
 
+    const { logActivity } = await import("@/lib/logger");
+    if (session?.user?.id) {
+      await logActivity({
+        userId: session.user.id,
+        role: (session.user as any).role || "USER",
+        action: "CREATE_ORDER",
+        entityType: "Order",
+        entityId: order.id,
+        details: `Placed order ${order.id} for total ${order.total}`,
+      });
+    }
+
     return NextResponse.json({ data: order }, { status: 201 });
 
   } catch (error: any) {
