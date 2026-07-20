@@ -214,7 +214,7 @@ export function DashboardPage({ initialUser, activeCoupons = [] }: { initialUser
                             {(order.items || []).slice(0, 3).map((item: any, idx: number) => (
                               <div key={item.id || idx} className="relative w-9 h-9 rounded-lg overflow-hidden border-2 border-white bg-white flex-shrink-0">
                                 {item.product?.images?.[0] ? (
-                                  <Image src={item.product.images[0].url} alt="" fill className="object-cover" unoptimized />
+                                  <Image src={item.product.images[0].url} alt={item.product.name} fill className="object-cover" unoptimized />
                                 ) : (
                                   <div className="w-full h-full bg-gray-200" />
                                 )}
@@ -295,7 +295,7 @@ export function DashboardPage({ initialUser, activeCoupons = [] }: { initialUser
                           {(order.items || []).map((item: any, idx: number) => (
                             <div key={item.id || idx} className="relative w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden bg-gray-50 border border-gray-100">
                               {item.product?.images?.[0] && (
-                                <Image src={item.product.images[0].url} alt="" fill className="object-cover" unoptimized />
+                                <Image src={item.product.images[0].url} alt={item.product.name} fill className="object-cover" unoptimized />
                               )}
                             </div>
                           ))}
@@ -342,7 +342,7 @@ export function DashboardPage({ initialUser, activeCoupons = [] }: { initialUser
                       >
                         <div className="relative aspect-square bg-gray-50 rounded-xl mb-3 overflow-hidden">
                           {item.product?.images?.[0] && (
-                            <Image src={item.product.images[0].url} alt="" fill className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform" unoptimized />
+                            <Image src={item.product.images[0].url} alt={item.product.name} fill className="object-contain mix-blend-multiply group-hover:scale-105 transition-transform" unoptimized />
                           )}
                         </div>
                         <p className="text-xs text-gray-400 mb-1">{item.product?.category?.name}</p>
@@ -605,7 +605,7 @@ export function DashboardPage({ initialUser, activeCoupons = [] }: { initialUser
                   <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl mb-2">
                     <div className="w-14 h-14 rounded-full bg-primary-100 flex items-center justify-center overflow-hidden flex-shrink-0">
                       {initialUser.image ? (
-                        <Image src={initialUser.image} alt="" width={56} height={56} className="rounded-full object-cover" unoptimized />
+                        <Image src={initialUser.image} alt={initialUser.name || "User Avatar"} width={56} height={56} className="rounded-full object-cover" unoptimized />
                       ) : (
                         <span className="text-xl font-bold text-primary-500">{(initialUser.name || initialUser.email || "U")[0].toUpperCase()}</span>
                       )}

@@ -15,9 +15,28 @@ export async function generateMetadata(): Promise<Metadata> {
     settings[s.key] = s.value;
   });
 
+  const siteName = settings.SITE_NAME || "Raihans Shop";
+  const title = settings.SEO_BRANDS_TITLE || `Brands | ${siteName}`;
+  const description = settings.SEO_BRANDS_DESCRIPTION || "Shop from your favorite top-quality grocery and daily essential brands at Raihans Shop.";
+
   return {
-    title: settings.SEO_BRANDS_TITLE || `Brands | ${settings.SITE_NAME || "FreshMart"}`,
-    description: settings.SEO_BRANDS_DESCRIPTION || "Shop from your favorite brands",
+    title,
+    description,
+    alternates: {
+      canonical: "https://raihans.shop/brands",
+    },
+    openGraph: {
+      title,
+      description,
+      url: "https://raihans.shop/brands",
+      siteName,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    }
   };
 }
 

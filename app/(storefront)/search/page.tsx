@@ -24,6 +24,18 @@ export async function generateMetadata(
     },
     alternates: {
       canonical: `https://raihans.shop/search`,
+    },
+    openGraph: {
+      title,
+      description: `Browse search results for ${query} at Raihans Shop.`,
+      url: `https://raihans.shop/search?query=${query}`,
+      type: "website",
+      siteName: "Raihans Shop",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: `Browse search results for ${query} at Raihans Shop.`,
     }
   };
 }
