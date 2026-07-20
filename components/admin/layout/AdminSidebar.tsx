@@ -50,7 +50,7 @@ export function AdminSidebar() {
           </div>
           {!collapsed && (
             <div>
-              <p className="font-bold text-white text-sm leading-none">FreshMart</p>
+              <p className="font-bold text-white text-sm leading-none">Raihans Shop</p>
               <p className="text-blue-400 text-xs mt-0.5">Admin Panel</p>
             </div>
           )}
@@ -131,7 +131,7 @@ function MobileSidebar({ pathname }: { pathname: string }) {
                 <ShieldCheck className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-bold text-white text-sm leading-none">FreshMart</p>
+                <p className="font-bold text-white text-sm leading-none">Raihans Shop</p>
                 <p className="text-blue-400 text-xs mt-0.5">Admin Panel</p>
               </div>
             </div>

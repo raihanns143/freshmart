@@ -26,7 +26,7 @@ export async function Footer() {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <ShoppingCart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white tracking-tight">FreshMart</span>
+              <span className="text-xl font-bold text-white tracking-tight">Raihans Shop</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
               Your one-stop destination for farm-fresh groceries, premium meats, and everyday essentials delivered straight to your door.
@@ -55,11 +55,11 @@ export async function Footer() {
             <h3 className="text-white font-bold text-lg mb-6">Quick Links</h3>
             <ul className="flex flex-col gap-3">
               {[
-                { href: "/", label: "About Us" },
+                { href: "/about", label: "About Raihans Shop" },
                 { href: "/shop", label: "Shop All Products" },
-                { href: "/", label: "FAQ & Support" },
-                { href: "/", label: "Fresh Blog" },
-                { href: "/", label: "Careers" },
+                { href: "/faq", label: "FAQ & Support" },
+                { href: "/privacy", label: "Privacy Policy" },
+                { href: "/contact", label: "Contact Us" },
               ].map((link) => (
                 <li key={`${link.href}-${link.label}`}>
                   <Link href={link.href} className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm group">
@@ -103,8 +103,8 @@ export async function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="mailto:support@freshmart.com" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  support@freshmart.com
+                <a href="mailto:support@raihans.shop" className="text-sm text-gray-400 hover:text-white transition-colors">
+                  support@raihans.shop
                 </a>
               </li>
             </ul>
@@ -117,17 +117,17 @@ export async function Footer() {
         {/* Bottom Legal Sub-bar */}
         <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-sm text-center md:text-left">
-            &copy; {currentYear} FreshMart Pro. All rights reserved.
+            &copy; {currentYear} Raihans Shop. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Link href="/" className="text-gray-500 hover:text-white text-sm transition-colors">
+            <Link href="/privacy" className="text-gray-500 hover:text-white text-sm transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/" className="text-gray-500 hover:text-white text-sm transition-colors">
+            <Link href="/terms" className="text-gray-500 hover:text-white text-sm transition-colors">
               Terms of Service
             </Link>
-            <Link href="/" className="text-gray-500 hover:text-white text-sm transition-colors">
-              Cookie Policy
+            <Link href="/faq" className="text-gray-500 hover:text-white text-sm transition-colors">
+              FAQ
             </Link>
           </div>
         </div>

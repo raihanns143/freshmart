@@ -63,7 +63,7 @@ function LoginFormInner() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 mb-4 shadow-lg shadow-emerald-500/20">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white">FreshMart Admin</h1>
+          <h1 className="text-2xl font-bold text-white">Raihans Shop Admin</h1>
           <p className="text-slate-400 text-sm mt-1">Sign in to your admin account</p>
         </div>
 

@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Starting idempotent production seed for FreshMart Bangladesh...");
+  console.log("Starting idempotent production seed for Raihans Shop...");
 
   // 1. Settings (Upsert)
   console.log("Seeding localized settings...");

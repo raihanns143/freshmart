@@ -20,7 +20,7 @@ export type StoreSettings = {
 const defaultSettings: StoreSettings = {
   currency: "BDT",
   activeCurrency: defaultBDT,
-  siteName: "FreshMart Bangladesh",
+  siteName: "Raihans Shop",
   taxRate: 0.05,
   deliveryCharge: 50,
   contactEmail: "support@freshmart.com.bd",

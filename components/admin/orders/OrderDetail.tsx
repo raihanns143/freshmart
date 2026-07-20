@@ -111,7 +111,7 @@ export function OrderDetail({ order }: { order: any }) {
 
       {/* Print Invoice Header */}
       <div className="hidden print:block text-center py-4 border-b">
-        <h1 className="text-3xl font-bold text-black">FreshMart</h1>
+        <h1 className="text-3xl font-bold text-black">Raihans Shop</h1>
         <p className="text-gray-500">Invoice #{order.orderNumber}</p>
         <p className="text-gray-500">{new Date(order.createdAt).toLocaleString()}</p>
       </div>

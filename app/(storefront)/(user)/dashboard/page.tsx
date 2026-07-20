@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { DashboardPage } from "@/components/dashboard/DashboardPage";
 
 export const metadata: Metadata = {
-  title: "My Account – FreshMart",
+  title: "My Account – Raihans Shop",
   description: "Manage your orders, addresses, and account settings.",
 };
 

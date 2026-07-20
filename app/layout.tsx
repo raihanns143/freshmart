@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ResponsiveToaster } from "@/components/ui/responsive-toaster";
@@ -20,7 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
       key: {
         in: [
           "SITE_NAME", "SEO_TITLE", "SEO_DESCRIPTION", "SEO_KEYWORDS", 
-          "SEO_OG_IMAGE", "SEO_TWITTER_IMAGE", "STORE_ADDRESS", "CONTACT_PHONE", "CONTACT_EMAIL"
+          "SEO_OG_IMAGE", "SEO_TWITTER_IMAGE", "STORE_ADDRESS", "CONTACT_PHONE", "CONTACT_EMAIL",
+          "GOOGLE_SITE_VERIFICATION", "BING_SITE_VERIFICATION", "YANDEX_SITE_VERIFICATION", 
+          "PINTEREST_SITE_VERIFICATION", "FACEBOOK_DOMAIN_VERIFICATION"
         ],
       },
     },
@@ -38,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
     "Raihans Shop", "Online Grocery Bangladesh", "Grocery Delivery Bangladesh", 
     "Online Supermarket", "Fresh Vegetables", "Fresh Fish", "Fresh Meat", 
     "Rice", "Daily Essentials", "Bangladesh Grocery", "Rajshahi Grocery", 
-    "Cash On Delivery", "FreshMart Bangladesh"
+    "Cash On Delivery"
   ];
   const ogImage = settings.SEO_OG_IMAGE || "/logo.png";
   const twitterImage = settings.SEO_TWITTER_IMAGE || "/logo.png";
@@ -54,8 +57,14 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: siteName }],
     creator: siteName,
     publisher: siteName,
-    alternates: {
-      canonical: "https://raihans.shop",
+    verification: {
+      google: settings.GOOGLE_SITE_VERIFICATION,
+      yandex: settings.YANDEX_SITE_VERIFICATION,
+      other: {
+        "msvalidate.01": settings.BING_SITE_VERIFICATION,
+        "p:domain_verify": settings.PINTEREST_SITE_VERIFICATION,
+        "facebook-domain-verification": settings.FACEBOOK_DOMAIN_VERIFICATION,
+      }
     },
     robots: {
       index: true,
@@ -139,6 +148,15 @@ export default async function RootLayout({
     address,
   };
 
+  const socialLinks = [
+    settings.SOCIAL_FACEBOOK,
+    settings.SOCIAL_LINKEDIN,
+    settings.SOCIAL_GITHUB,
+    settings.SOCIAL_INSTAGRAM,
+    settings.SOCIAL_YOUTUBE,
+    settings.SOCIAL_TWITTER
+  ].filter(Boolean) as string[];
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -148,6 +166,7 @@ export default async function RootLayout({
         "name": siteName,
         "url": "https://raihans.shop",
         "logo": "https://raihans.shop/logo.png",
+        "sameAs": socialLinks.length > 0 ? socialLinks : undefined,
         "contactPoint": {
           "@type": "ContactPoint",
           "telephone": contactPhone,
@@ -172,12 +191,13 @@ export default async function RootLayout({
         }
       },
       {
-        "@type": "Store",
-        "@id": "https://raihans.shop/#store",
+        "@type": "LocalBusiness",
+        "@id": "https://raihans.shop/#localbusiness",
         "name": siteName,
         "image": "https://raihans.shop/logo.png",
         "telephone": contactPhone,
         "email": contactEmail,
+        "url": "https://raihans.shop",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": address,
@@ -189,6 +209,22 @@ export default async function RootLayout({
           "latitude": "24.3745",
           "longitude": "88.6042"
         },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "opens": "08:00",
+            "closes": "22:00"
+          }
+        ],
         "priceRange": "$$"
       }
     ]
@@ -201,8 +237,95 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google Analytics */}
+        {settings.GOOGLE_ANALYTICS_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${settings.GOOGLE_ANALYTICS_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${settings.GOOGLE_ANALYTICS_ID}');
+              `}
+            </Script>
+          </>
+        )}
+
+        {/* Google Tag Manager */}
+        {settings.GOOGLE_TAG_MANAGER_ID && (
+          <Script id="google-tag-manager" strategy="afterInteractive">
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${settings.GOOGLE_TAG_MANAGER_ID}');
+            `}
+          </Script>
+        )}
+
+        {/* Microsoft Clarity */}
+        {settings.MICROSOFT_CLARITY_ID && (
+          <Script id="microsoft-clarity" strategy="afterInteractive">
+            {`
+              (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "${settings.MICROSOFT_CLARITY_ID}");
+            `}
+          </Script>
+        )}
+
+        {/* Meta Pixel */}
+        {settings.FACEBOOK_PIXEL_ID && (
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${settings.FACEBOOK_PIXEL_ID}');
+              fbq('track', 'PageView');
+            `}
+          </Script>
+        )}
       </head>
       <body className="min-h-screen bg-gray-50 flex flex-col text-gray-900">
+        {/* Google Tag Manager (noscript) */}
+        {settings.GOOGLE_TAG_MANAGER_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${settings.GOOGLE_TAG_MANAGER_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+        
+        {/* Meta Pixel (noscript) */}
+        {settings.FACEBOOK_PIXEL_ID && (
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              src={`https://www.facebook.com/tr?id=${settings.FACEBOOK_PIXEL_ID}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        )}
+
         <Providers settings={globalSettings}>
           {children}
           <ResponsiveToaster />

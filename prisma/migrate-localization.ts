@@ -124,7 +124,7 @@ async function main() {
 
   // 5. Update SEO Settings
   const seoSettings = [
-    { key: "SITE_NAME", value: "FreshMart Bangladesh" },
+    { key: "SITE_NAME", value: "Raihans Shop" },
     { key: "SEO_TITLE", value: "FreshMart - Premium Bangladeshi Grocery" },
     { key: "SEO_DESCRIPTION", value: "Shop online for fresh produce, dairy, meat, and everyday Bangladeshi essentials." },
     { key: "SEO_KEYWORDS", value: "grocery, bangladesh, fresh vegetables, fish, hilsha, miniket rice, dhaka grocery" },

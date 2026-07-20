@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { LoginForm } from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Sign In – FreshMart",
-  description: "Sign in to your FreshMart account to access your orders and wishlist.",
+  title: "Sign In – Raihans Shop",
+  description: "Sign in to your Raihans Shop account to access your orders and wishlist.",
 };
 
 import { Suspense } from "react";

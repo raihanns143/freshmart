@@ -43,6 +43,7 @@ export function SettingsForm({ initialSettings, currencies }: SettingsFormProps)
     { id: "smtp", label: "Email / SMTP", icon: Mail },
     { id: "seo", label: "SEO Settings", icon: Store },
     { id: "tracking", label: "Analytics & Tracking", icon: Store },
+    { id: "social", label: "Social Profiles", icon: Store },
   ];
 
   return (
@@ -98,7 +99,7 @@ export function SettingsForm({ initialSettings, currencies }: SettingsFormProps)
                     value={settings.SITE_NAME ?? ""}
                     onChange={(e) => handleChange("SITE_NAME", e.target.value)}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                    placeholder="FreshMart Bangladesh"
+                    placeholder="Raihans Shop"
                   />
                 </div>
                 <div>
@@ -297,6 +298,22 @@ export function SettingsForm({ initialSettings, currencies }: SettingsFormProps)
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Yandex Site Verification</label>
+                  <input
+                    value={settings.YANDEX_SITE_VERIFICATION ?? ""}
+                    onChange={(e) => handleChange("YANDEX_SITE_VERIFICATION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Pinterest Site Verification</label>
+                  <input
+                    value={settings.PINTEREST_SITE_VERIFICATION ?? ""}
+                    onChange={(e) => handleChange("PINTEREST_SITE_VERIFICATION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
               </div>
             )}
 
@@ -340,6 +357,60 @@ export function SettingsForm({ initialSettings, currencies }: SettingsFormProps)
                   <input
                     value={settings.FACEBOOK_DOMAIN_VERIFICATION ?? ""}
                     onChange={(e) => handleChange("FACEBOOK_DOMAIN_VERIFICATION", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+              </div>
+            )}
+            
+            {activeTab === "social" && (
+              <div className="space-y-4 max-w-xl">
+                <h2 className="text-lg font-semibold text-white mb-4">Social Profiles</h2>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Facebook URL</label>
+                  <input
+                    value={settings.SOCIAL_FACEBOOK ?? ""}
+                    onChange={(e) => handleChange("SOCIAL_FACEBOOK", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">LinkedIn URL</label>
+                  <input
+                    value={settings.SOCIAL_LINKEDIN ?? ""}
+                    onChange={(e) => handleChange("SOCIAL_LINKEDIN", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">GitHub URL</label>
+                  <input
+                    value={settings.SOCIAL_GITHUB ?? ""}
+                    onChange={(e) => handleChange("SOCIAL_GITHUB", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">Instagram URL</label>
+                  <input
+                    value={settings.SOCIAL_INSTAGRAM ?? ""}
+                    onChange={(e) => handleChange("SOCIAL_INSTAGRAM", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">YouTube URL</label>
+                  <input
+                    value={settings.SOCIAL_YOUTUBE ?? ""}
+                    onChange={(e) => handleChange("SOCIAL_YOUTUBE", e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 block mb-1">X (Twitter) URL</label>
+                  <input
+                    value={settings.SOCIAL_TWITTER ?? ""}
+                    onChange={(e) => handleChange("SOCIAL_TWITTER", e.target.value)}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                 </div>

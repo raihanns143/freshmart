@@ -70,7 +70,7 @@ export function LoginForm() {
         <Link href="/" className="mb-6 flex justify-center focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-lg">
           <Image
             src="/logo.png"
-            alt="FreshMart Logo"
+            alt="Raihans Shop Logo"
             width={160}
             height={48}
             className="h-12 w-auto object-contain"
